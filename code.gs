@@ -18,7 +18,7 @@ limitations under the License.
 */
 
 // Sets API key for accessing Cloud Natural Language API.
-const myApiKey = 'AIzaSyDjjhXv25AoxupTddxGS_2val7ziLE3IHA';
+const myApiKey = 'api key goes here';
 
 // Matches column names in Review Data sheet to variables.
 let COLUMN_NAME = {
