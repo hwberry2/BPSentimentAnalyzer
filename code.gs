@@ -18,32 +18,32 @@ limitations under the License.
 */
 
 // Sets API key for accessing Cloud Natural Language API.
-const myApiKey = 'AIzaSyDjjhXv25AoxupTddxGS_2val7ziLE3IHA'; // Replace with your API key.
+const myApiKey = 'AIzaSyDjjhXv25AoxupTddxGS_2val7ziLE3IHA';
 
 // Matches column names in Review Data sheet to variables.
 let COLUMN_NAME = {
-  COMMENTS: 'comments',
-  ENTITY: 'entity_sentiment',
-  ID: 'id'
+  COMMENTS: 'comments',//change this to 'combined_comments'
+  ENTITY: 'entity_sentiment',//change this to 'sentiment_score'
+  ID: 'id'//change to 'time_stamp'?
 };
 
 /**
- * Creates a Demo menu in Google Spreadsheets.
+ * Creates a New menu in Google Spreadsheets.
  */
 function onOpen() {
   SpreadsheetApp.getUi()
-    .createMenu('***Bills Sentiment Analyzer***')
+    .createMenu('***Bill\'s Sentiment Analyzer***')
     .addItem('Click Here to Perform Sentiment Analysis', 'markEntitySentiment')
     .addToUi();
 };
 
 /**
-* Analyzes entities and sentiment for each comment in  
+* Analyzes sentiment for each comment in  
 * Review Data sheet and copies results into the 
 * Entity Sentiment Data sheet.
 */
 function markEntitySentiment() {
-  // Sets variables for "Review Data" sheet
+  // Sets variables from the "Review Data" sheet
   let ss = SpreadsheetApp.getActiveSpreadsheet();
   let dataSheet = ss.getSheetByName('Review Data');
   let rows = dataSheet.getDataRange();
@@ -53,11 +53,14 @@ function markEntitySentiment() {
   
   // Checks to see if "Entity Sentiment Data" sheet is present, and
   // if not, creates a new sheet and sets the header row.
+  //this code is not necessary by default and might need
+  //to be removed later.
   let entitySheet = ss.getSheetByName('Entity Sentiment Data');
   if (entitySheet == null) {
    ss.insertSheet('Entity Sentiment Data');
    let entitySheet = ss.getSheetByName('Entity Sentiment Data');
    let esHeaderRange = entitySheet.getRange(1,1,1,6);
+   //creates the header
    let esHeader = [['Review ID','Entity','Salience','Sentiment Score',
                     'Sentiment Magnitude','Number of mentions']];
    esHeaderRange.setValues(esHeader);
@@ -87,6 +90,7 @@ function markEntitySentiment() {
         let nlData = retrieveEntitySentiment(commentEnCellVal);
         // Pastes each entity and sentiment score into Entity Sentiment Data sheet.
         let newValues = []
+        //the for should be deleted
         //for (let entity in nlData.documentSentiment) {
         let entity = nlData.documentSentiment;//[entity];
         let row = [reviewId, "", "", entity.score, 
@@ -100,8 +104,7 @@ function markEntitySentiment() {
         // Pastes "complete" into entity_sentiment column to denote completion of NL API call.
         dataSheet.getRange(i+1, entityColumnIdx+1).setValue("complete");
         dataSheet.getRange(i+1, entityColumnIdx+2).setValue(entity.score);
-        dataSheet.getRange(i+1, entityColumnIdx+3).setValue(entity.magnitude);
-        dataSheet.getRange(i+1, entityColumnIdx+4).setValue("this totally works");
+        dataSheet.getRange(i+1, entityColumnIdx+3).setValue(entity.magnitude);//necessary?
      }
    }
 };
